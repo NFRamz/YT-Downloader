@@ -23,10 +23,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Write cookies file
-        run: echo "$COOKIES" > cookies.txt
+        run: echo "$YT_COOKIES" > cookies.txt
         env:
-          COOKIES: ${{ secrets.COOKIES }}
+          YT_COOKIES: ${{ secrets.YT_COOKIES }}
         
       - name: Run yt-dlp script
         run: python app.py
-        
