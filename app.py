@@ -21,6 +21,7 @@ def download_youtube_video():
             'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
             'quiet': True,
             'postprocessor_args': ['-ffmpeg-location', '/usr/bin/ffmpeg']
+            'geo_bypass': True
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
