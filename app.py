@@ -22,6 +22,7 @@ def download_youtube_video():
             'quiet': True,
             'postprocessor_args': ['-ffmpeg-location', '/usr/bin/ffmpeg'],
             'geo_bypass': True,
+            'proxy': 'http://103.165.155.145:8080', 
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
