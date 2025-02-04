@@ -23,7 +23,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Write cookies file
-        run: echo "$YT_COOKIES" > cookies.txt
+        run: echo "$COOKIES" > cookies.txt
         env:
           COOKIES: ${{ secrets.COOKIES }}
         
