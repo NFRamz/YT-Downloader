@@ -5,6 +5,9 @@ from flask import Flask, render_template, request, send_from_directory
 app = Flask(__name__)
 DOWNLOAD_FOLDER = 'downloads'
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
+# Set lokasi FFmpeg yang terinstal di sistem Railway
+os.environ["FFMPEG_LOCATION"] = "/usr/bin/ffmpeg"
+
 
 @app.route('/')
 def home():
@@ -20,12 +23,14 @@ def download_youtube_video():
             'merge_output_format': 'mp3',
             'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
             'quiet': True,
+            'cookies': 'cookies.txt', 
+            'ffmpeg_location': "/usr/bin/ffmpeg",
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',  # Konversi ke MP3
                 'preferredquality': '192',  # Kualitas audio 192kbps
             }],
-            'cookies': 'cookies.txt',  
+             
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
