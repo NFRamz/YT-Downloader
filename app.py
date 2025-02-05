@@ -17,11 +17,8 @@ def download_youtube_video():
     try:
         ydl_opts = {
             'format': '140',
-            'merge_output_format': 'mp3',
             'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
             'quiet': True,
-            'postprocessor_args': ['-ffmpeg-location', '/usr/bin/ffmpeg'],
-            'cookies': 'cookies.txt',  
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
