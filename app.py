@@ -20,7 +20,7 @@ def download_youtube_video():
             'merge_output_format': 'mp3',
             'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
             'quiet': True,
-            'postprocessor_args': ['-ffmpeg-location', '/usr/bin/ffmpeg'],
+           
             'cookies': 'cookies.txt',  
         }
 
