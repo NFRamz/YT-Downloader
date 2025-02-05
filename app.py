@@ -21,6 +21,11 @@ def download_youtube_video():
             'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
             'quiet': True,
             'postprocessor_args': ['-ffmpeg-location', '/usr/bin/ffmpeg'],
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',  # Konversi ke MP3
+                'preferredquality': '192',  # Kualitas audio 192kbps
+            }],
             'cookies': 'cookies.txt',  
         }
 
