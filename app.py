@@ -6,7 +6,7 @@ app = Flask(__name__)
 DOWNLOAD_FOLDER = 'downloads'
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 # Set lokasi FFmpeg yang terinstal di sistem Railway
-os.environ["FFMPEG_LOCATION"] = "/usr/bin/ffmpeg"
+os.environ["FFMPEG_LOCATION"] = "/nix/store"
 
 
 @app.route('/')
@@ -24,7 +24,7 @@ def download_youtube_video():
             'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
             'quiet': True,
             'cookies': 'cookies.txt', 
-            'ffmpeg_location': "/usr/bin/ffmpeg",
+            'ffmpeg_location': "/nix/store",
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',  # Konversi ke MP3
