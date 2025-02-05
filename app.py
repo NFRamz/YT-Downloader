@@ -3,8 +3,8 @@ import yt_dlp
 from flask import Flask, render_template, request, send_from_directory
 
 app = Flask(__name__)
-download_folderName = 'download'
-os.makedirs(download_folderName, exist_ok=True)
+DOWNLOAD_FOLDER = 'downloads'
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 @app.route('/')
 def home():
@@ -17,9 +17,11 @@ def download_youtube_video():
     try:
         ydl_opts = {
             'format': '140',
-            'outtmpl': os.path.join(download_folderName, '%(title)s.%(ext)s'),
+            'merge_output_format': 'mp3',
+            'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
             'quiet': True,
-            'cookies': 'cookies.txt',       
+            'postprocessor_args': ['-ffmpeg-location', '/usr/bin/ffmpeg'],
+            'cookies': 'cookies.txt',  
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -28,8 +30,8 @@ def download_youtube_video():
             video_ext = info_dict.get('ext', 'mp4')
 
             # Setelah unduhan selesai, kirimkan file ke pengguna
-            file_path = os.path.join(download_folderName, f"{video_title}.{video_ext}")
-            return send_from_directory(download_folderName, f"{video_title}.{video_ext}", as_attachment=True)
+            file_path = os.path.join(DOWNLOAD_FOLDER, f"{video_title}.{video_ext}")
+            return send_from_directory(DOWNLOAD_FOLDER, f"{video_title}.{video_ext}", as_attachment=True)
     
     except Exception as e:
         return f"An error occurred: {e}"
