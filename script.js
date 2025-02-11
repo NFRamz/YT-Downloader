@@ -30,7 +30,7 @@ function displayResult(data, platform) {
             //<p>Author: <a href="${data.authorUrl}" target="_blank">${data.author}</a></p>
             //<p>Views: ${data.views}</p>
             <a href="${data.url}" download>Download MP3</a>
-            <a href="${data.videoUrl}" download>Download Video</a>
+            //<a href="${data.videoUrl}" download>Download Video</a>
         `;
     } else if (platform === "facebook") {
         resultHtml = `
