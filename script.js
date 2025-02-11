@@ -25,8 +25,9 @@ function displayResult(data, platform) {
 
     if (platform === "youtube") {
         resultHtml = `
-            <h3>${data.title}</h3>
             <img src="${data.thumbnail}" alt="Thumbnail" width="100%">
+            <h3>${data.title}</h3>
+            <br>
             <label>4.Klik tombol "Download Mp3" dibawah:</label>
             <a href="${data.url}" download>Download MP3</a>
             
