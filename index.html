@@ -3,21 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NF-Mp3</title>
+    <title>Downloader Video</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
 </head>
 <body>
     <div class="container">
-        <h2>NF-Mp3</h2>
-        <label for="platform">Pilih Platform:</label>
+        <h2>Downloader Video</h2>
+        
+        <label for="platform">1.Pilih Aplikasi:</label>
         <select id="platform">
             <option value="youtube">YouTube</option>
             <option value="facebook">Facebook</option>
             <option value="tiktok">TikTok</option>
         </select>
+        
+        <label for="videoUrl">2.Taruh link Aplikasi:</label>
         <input type="text" id="videoUrl" placeholder="Masukkan URL Video">
-        <button onclick="fetchData()">Download</button>
+
+        <label for="result">3.Klik tombol dibawah ini:</label>
+        <button onclick="fetchData()">Dapatkan Link</button>
         <div id="result"></div>
     </div>
 </body>
