@@ -26,6 +26,6 @@ jobs:
         run: echo "$YT_COOKIES" > cookies.txt
         env:
           YT_COOKIES: ${{ secrets.YT_COOKIES }}
-        
+
       - name: Run yt-dlp script
         run: python app.py
