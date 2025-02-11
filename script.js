@@ -29,6 +29,7 @@ function displayResult(data, platform) {
             <img src="${data.thumbnail}" alt="Thumbnail" width="100%">
             //<p>Author: <a href="${data.authorUrl}" target="_blank">${data.author}</a></p>
             //<p>Views: ${data.views}</p>
+            <label>4.Klik tombol "Download Mp3" dibawah:</label>
             <a href="${data.url}" download>Download MP3</a>
             //<a href="${data.videoUrl}" download>Download Video</a>
         `;
