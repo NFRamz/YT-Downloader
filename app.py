@@ -14,18 +14,18 @@ def home():
 @app.route('/download', methods=['POST'])
 def download_youtube_audio():
     url = request.form['url']
-
+    
     try:
         ydl_opts = {
-            'format': 'bestaudio/best',  # Pilih audio terbaik
+            'format': 'bestaudio/best',  # Pilih kualitas audio terbaik
             'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
-            'quiet': False,  # Tampilkan progress
-            'cookies': 'cookies.txt',  # Gunakan cookies.txt untuk menghindari verifikasi
+            'quiet': False,  # Tampilkan progress di terminal/log
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',  # Konversi ke MP3
                 'preferredquality': '192',  # Kualitas 192kbps
             }],
+            'cookiefile': '--cookies-from-browser chrome',  # Ambil cookies dari Chrome
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
