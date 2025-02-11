@@ -19,6 +19,7 @@ def download_youtube_video():
             'format': '140',
             'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
             'quiet': True,
+            'cookies': 'YT_COOKIES.txt',
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
