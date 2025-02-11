@@ -27,8 +27,8 @@ function displayResult(data, platform) {
         resultHtml = `
             <h3>${data.title}</h3>
             <img src="${data.thumbnail}" alt="Thumbnail" width="100%">
-            <p>Author: <a href="${data.authorUrl}" target="_blank">${data.author}</a></p>
-            <p>Views: ${data.views}</p>
+            //<p>Author: <a href="${data.authorUrl}" target="_blank">${data.author}</a></p>
+            //<p>Views: ${data.views}</p>
             <a href="${data.url}" download>Download MP3</a>
             <a href="${data.videoUrl}" download>Download Video</a>
         `;
