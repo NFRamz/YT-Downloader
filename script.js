@@ -5,6 +5,7 @@ async function fetchData() {
 
     if (platform === "youtube") {
         apiUrl = `https://api.ryzendesu.vip/api/downloader/ytmp3?url=${videoUrl}`;
+        //apiUrl = `https://apidl.asepharyana.cloud/api/downloader/ytmp3?url=${videoUrl}`;
     } else if (platform === "facebook") {
         apiUrl = `https://api.ryzendesu.vip/api/downloader/fbdl?url=${videoUrl}`;
     } else if (platform === "tiktok") {
@@ -28,6 +29,7 @@ function displayResult(data, platform) {
     let resultHtml = "";
 
     if (platform === "youtube") {
+                
             resultHtml = `
                 <img src="${data.thumbnail}" alt="Thumbnail" width="100%">
                 <h3>${data.title}</h3>
