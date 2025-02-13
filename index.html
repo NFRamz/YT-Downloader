@@ -8,21 +8,22 @@
         <script defer src="script.js"></script>
     </head>
     <body>
-        <div class="container">
-            <h2>NF_Mp3</h2>
-            
         
-            <select id="platform">
-                <option value="youtube">YouTube</option>
-                <option value="facebook">Facebook</option>
-                <option value="tiktok">TikTok</option>
-            </select>
-        
-            <input type="text" id="videoUrl" placeholder="Taruh link video disini">
+    <div class="container">
+        <p class="title">NF - Downloader</p>  
+                <div class="selectPlatform">
+                    <label class="sub_title">Pilih Platform</label>
+                    <select id="platform">
+                        <option value="youtube">YouTube</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="tiktok">TikTok</option>
+                    </select>
+                </div>
 
-        
-            <button onclick="fetchData()">Dapatkan Link</button>
-            <div id="result"></div>
-        </div>
+                    <input type="text" id="videoUrl" placeholder="Taruh link video disini">
+                    <button class="btn" onclick="fetchData()">Dapatkan Link</button>
+                <div id="result"></div>
+            </div>
+    </div>
     </body>
-    </html>
+</html>
