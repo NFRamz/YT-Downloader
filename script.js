@@ -17,7 +17,11 @@ async function fetchData() {
         const data = await response.json();
         displayResult(data, platform);
     } catch (error) {
-        document.getElementById("result").innerHTML = "Gagal mengambil data.";
+        document.getElementById("result").innerHTML =  `
+            <h3>Terjadi kesalahan saat memproses permintaan Anda.</h3>
+            <a href="https://yt.savetube.me/1kejjj1?id=361901348">Link cadangan</a>
+            `;
+
     }
 }
 
@@ -25,14 +29,14 @@ function displayResult(data, platform) {
     let resultHtml = "";
 
     if (platform === "youtube") {
-        resultHtml = `
-            <img src="${data.thumbnail}" alt="Thumbnail" width="100%">
-            <h3>${data.title}</h3>
-            <br>
-            <label>4.Klik tombol "Download Mp3" dibawah:</label>
-            <a href="${data.url}" download>Download MP3</a>
-            
-        `;
+            resultHtml = `
+                <img src="${data.thumbnail}" alt="Thumbnail" width="100%">
+                <h3>${data.title}</h3>
+
+                
+                <a href="${data.url}" download>Download MP3</a>
+                
+            `;
     } else if (platform === "facebook") {
         resultHtml = `
             <h3>${data.title}</h3>
@@ -48,3 +52,4 @@ function displayResult(data, platform) {
     }
     document.getElementById("result").innerHTML = resultHtml;
 }
+
