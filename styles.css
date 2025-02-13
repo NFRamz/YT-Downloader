@@ -3,22 +3,32 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     background-color: #f4f4f4;
-    margin: 0;
+    
 }
 
 .container {
+    margin: 2%;
     background: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 300px;
+    width: 30%;
+    height: 10%;
 }
 
-input, select, button {
+select, button {
     width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+input{
+    width: 95%;
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
