@@ -1,29 +1,28 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NF_Mp3</title>
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
-</head>
-<body>
-    <div class="container">
-        <h2>NF_Mp3</h2>
+    <!DOCTYPE html>
+    <html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NF_Mp3</title>
+        <link rel="stylesheet" href="styles.css">
+        <script defer src="script.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h2>NF_Mp3</h2>
+            
         
-        <label for="platform">1.Pilih Aplikasi:</label>
-        <select id="platform">
-            <option value="youtube">YouTube</option>
-            <option value="facebook">Facebook</option>
-            <option value="tiktok">TikTok</option>
-        </select>
+            <select id="platform">
+                <option value="youtube">YouTube</option>
+                <option value="facebook">Facebook</option>
+                <option value="tiktok">TikTok</option>
+            </select>
         
-        <label for="videoUrl">2.Taruh link Video:</label>
-        <input type="text" id="videoUrl" placeholder="Taruh link video disini">
+            <input type="text" id="videoUrl" placeholder="Taruh link video disini">
 
-        <label for="result">3.Klik tombol dibawah ini:</label>
-        <button onclick="fetchData()">Dapatkan Link</button>
-        <div id="result"></div>
-    </div>
-</body>
-</html>
+        
+            <button onclick="fetchData()">Dapatkan Link</button>
+            <div id="result"></div>
+        </div>
+    </body>
+    </html>
