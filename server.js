@@ -28,13 +28,6 @@ app.get('/.env', (req, res) => {
     });
 });
 
-app.use((req, res, next) => {
-    if (req.path === '/.env') {
-        return res.status(404).send('Not Found');
-    }
-    next();
-});
-
 
 // ✅ Port dari `.env` atau default 3000
 const PORT = process.env.PORT || 3000;
