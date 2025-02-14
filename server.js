@@ -7,12 +7,7 @@ const app = express();
 app.use(cors());
 
 // ✅ Melayani file statis (HTML, CSS, gambar, dll.)
-app.use(express.static(__dirname));
-
-// ✅ Menyajikan halaman utama
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
+app.use(express.static(path.join(__dirname, 'public')));
 
 // ✅ Mengambil environment variables untuk API & Google Analytics ID
 app.get('/.env', (req, res) => {
