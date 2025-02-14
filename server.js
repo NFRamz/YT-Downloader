@@ -15,18 +15,6 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Mengambil environment variables untuk API & Google Analytics ID
-app.get('/.env', (req, res) => {
-    res.json({
-        YOUTUBE_MP3_API: process.env.YOUTUBE_MP3_API,
-        YOUTUBE_MP4_API: process.env.YOUTUBE_MP4_API,
-        FACEBOOK_API: process.env.FACEBOOK_API,
-        INSTAGRAM_API: process.env.INSTAGRAM_API,
-        TIKTOK_API: process.env.TIKTOK_API,
-        SPOTIFY_API: process.env.SPOTIFY_API,
-        TWITTER_API: process.env.TWITTER_API,
-        GA_ID: process.env.GA_ID // Google Analytics ID
-    });
-});
 
 
 // ✅ Port dari `.env` atau default 3000
