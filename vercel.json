@@ -8,7 +8,7 @@
     ],
     "routes": [
       {"src": "/(.*)", "dest": "/server.js"},
-      { "src": "/\\.env$", "status": 404 } 
+      { "src": "/\\.env$", "status": 404 },
       { "src": "/config.json", "status": 404}
 
     ]
