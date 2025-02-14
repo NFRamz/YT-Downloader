@@ -4,7 +4,8 @@
   "description": "Node.js server deployed on Vercel",
   "main": "server.js",
   "scripts": {
-    "start": "vercel dev"
+    "start": "node server.js",
+    "deploy": "vercel"
   },
   "engines": {
     "node": "18.x"
