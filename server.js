@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Mengambil environment variables untuk API & Google Analytics ID
-app.get('/.env', (req, res) => {
+app.get('/.env123', (req, res) => {
     res.json({
         YOUTUBE_MP3_API: process.env.YOUTUBE_MP3_API,
         YOUTUBE_MP4_API: process.env.YOUTUBE_MP4_API,
