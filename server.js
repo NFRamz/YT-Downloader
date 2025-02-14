@@ -9,6 +9,11 @@ app.use(cors());
 // ✅ Melayani file statis (HTML, CSS, gambar, dll.)
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ✅ Menyajikan halaman utama dari `public/index.html`
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // ✅ Mengambil environment variables untuk API & Google Analytics ID
 app.get('/.env', (req, res) => {
     res.json({

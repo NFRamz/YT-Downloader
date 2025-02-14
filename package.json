@@ -4,10 +4,10 @@
   "description": "Node.js server deployed on Vercel",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "vercel dev",
-    "build": "vercel build",
-    "deploy": "vercel"
+    "start": "vercel dev"
+  },
+  "engines": {
+    "node": "18.x"
   },
   "dependencies": {
     "cors": "^2.8.5",
