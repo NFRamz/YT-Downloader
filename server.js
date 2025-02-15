@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Mengambil environment variables untuk API & Google Analytics ID
-app.get('/websitenfdownloderbynframz512025copyright15022025', (req, res) => {
+app.get('/.websitenfdownloderbynframz512025copyright15022025', (req, res) => {
     res.json({
         YOUTUBE_MP3_API: process.env.YOUTUBE_MP3_API,
         YOUTUBE_MP4_API: process.env.YOUTUBE_MP4_API,
