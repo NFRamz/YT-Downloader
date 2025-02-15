@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Mengambil environment variables untuk API & Google Analytics ID
-app.get('/.websitenfdownloderbynframz512025copyright15022025', (req, res) => {
+app.get('/nfdownloderbynframz512025copyright15022025', (req, res) => {
     res.json({
         YOUTUBE_MP3_API: process.env.YOUTUBE_MP3_API,
         YOUTUBE_MP4_API: process.env.YOUTUBE_MP4_API,
@@ -29,7 +29,7 @@ app.get('/.websitenfdownloderbynframz512025copyright15022025', (req, res) => {
 });
 
 // ✅ Port dari `.env` atau default 3000
-const PORT = process.env.PORT || e3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Server berjalan di http://localhost:${PORT}`);
 });
