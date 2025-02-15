@@ -2,7 +2,7 @@ let ENV = {};
 
 
 async function loadEnv() {
-    const response = await fetch("/.websitenfdownloderbynframz512025copyright15022025"); // Ambil dari server Node.js
+    const response = await fetch("/nfdownloderbynframz512025copyright15022025"); // Ambil dari server Node.js
     ENV = await response.json();
 }
 loadEnv();
