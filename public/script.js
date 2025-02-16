@@ -1,502 +1,245 @@
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #ffecb8;
+
+let ENV = {}; 
+
+
+async function loadEnv() {
+    const response = await fetch("/89asdsdasad89w02129pejdni10348k0mkg9pbmg8m42822fnnauf97ai91jmn2a8a2475nfo43pa9w719dnd86nq8weh67w7ber8jrji2nkqhg9e823j7hf8jendjhqkgedjr78drd8d9jqpourjndbumdadijubo1jnfi1kjf8rb181");
+    ENV = await response.json();
+}
+
+loadEnv();
+detectInput();
+async function fetchData() {
+    const platform = document.getElementById("platform").value;
+    const videoUrl = document.getElementById("videoUrl").value;
+    let apiUrl = "";
+    let apiUrl1 = "";
+
+    if(!videoUrl){
+        document.getElementById("result").innerHTML = `
+        <h3>Harap masukkan link video.</h3>
+        `;
+    }
+
+    loadLoader();
     
+    if (platform === "youtube") {
+        apiUrl = `${ENV.YOUTUBE_MP3_API}?url=${videoUrl}`;
+        apiUrl1 = `${ENV.YOUTUBE_MP4_API}?url=${videoUrl}`;
+
+    } else if (platform === "facebook") {
+        apiUrl = `${ENV.FACEBOOK_API}?url=${videoUrl}`;
+
+    }else if (platform === "instagram"){
+        apiUrl = `${ENV.INSTAGRAM_API}?url=${videoUrl}`;
+
+    }else if (platform === "tiktok") {
+        apiUrl = `${ENV.TIKTOK_API}?url=${videoUrl}`;
+
+    }else if (platform === "spotify"){
+        apiUrl = `${ENV.SPOTIFY_API}?url=${videoUrl}`;
+
+    }else if (platform === "twitter"){
+        apiUrl = `${ENV.TWITTER_API}?url=${videoUrl}`;
+    }
+
+    try {
+        if(platform === "youtube"){
+            const response = await fetch(apiUrl);
+            const response1 = await fetch(apiUrl1);
+            
+        if (!response.ok || !response1.ok) {
+            console.error(`Gagal mengambil data!(Err:RespYT) Status: ${response.status} - ${response.statusText}`);
+            throw new Error("Error.");
+        }
+
+        const data = await response.json();
+        const data1 = await response1.json();
+        displayResultForYoutube(data,data1, platform);
+
+        }else{
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                console.error(`Gagal mengambil data! Status: ${response.status} - ${response.statusText}`);
+                throw new Error("Error.");
+            }
+
+            const data = await response.json();
+            displayResult(data, platform);
+        }
+        
+    } catch (error) {
+        document.getElementById("result").innerHTML =  `
+            <h3>Terjadi kesalahan saat memproses permintaan Anda.</h3>
+            <a href="https://yt.savetube.me/1kejjj1?id=361901348">Link cadangan</a>
+            `;
+
+    }
 }
 
-.main-container{
-  display: flex;
-  
-  align-items: center;
-  flex-direction: column;
+//FUNCTION
+function displayResult(data, platform) {
+    let resultHtml = "";
+
+    if (platform === "facebook" ) {
+        resultHtml=`
+        <img src="${data.data[0].thumbnail}" alt="Thumbnail" width="100%"></img>
+        <h3>Pilih Kualitas Video</h3>
+        `;
+        
+        for(i = 0; i < data.data.length;i++){
+            resultHtml += ` 
+            <a href="${data.data[i].url}">Kualitas ${data.data[i].resolution}</a>
+            `;
+        }
+
+    }else if(platform === "instagram"){
+        for(i = 0; i < data.data.length;i++){
+            resultHtml += ` 
+            <img src="${data.data[i].thumbnail}" alt="Thumbnail" width="100%"></img>
+            <a href="${data.data[i].url}" download>Download Post</a>
+            `;
+        }
+        
+
+    }else if (platform === "tiktok") {
+        resultHtml=`
+        <img src="${data.data.data.origin_cover}" alt="Thumbnail" width="100%"></img>
+        
+        <h3>Download Audio</h3>
+        <a href="${data.data.data.music}" download="videoNo_WM.mp4">Mp3</a>
+
+        <h3>Download Video(Mp4)</h3>
+        <a href="${data.data.data.play}" download="videoNo_WM.mp4">Tanpa Watermark</a>
+        <a href="${data.data.data.hdplay}" download="videoNo_WM_HD.mp4">Tanpa Watermark(HD)</a>
+        <a href="${data.data.data.wmplay}" download="videoWM.mp4">Dengan Watermark</a>
+        
+        `;  
+        
+    }else if(platform === "spotify"){
+        if(data.success){
+            resultHtml=`
+            <img src="${data.metadata.cover}" alt="Thumbnail" width="100%"></img>
+            <h5>Author:${data.metadata.artists}</h5>
+            <h3>${data.metadata.title}</h3>
+
+            <a href="${data.link}" download>Download Music</a>
+            `;
+        }else{
+            resultHtml=`
+            <h3>Harap berikan link track music</h3>
+            `;
+        }
+
+    }else if(platform === "twitter"){
+        if(data.status){
+            if(data.type === "image"){
+                resultHtml=`
+                <h3>Format file:.jpg</h3>
+                `;
+                for(i = 0; i < data.media.length;i++){
+                    resultHtml += ` 
+                    <a href="${data.media[i]}" download>Download Gambar</a>
+                    `;
+                }
+            }else{
+                resultHtml=`
+                <h3>Format file: .mp4</h3>
+                `;
+                for(i = 0; i < data.media.length;i++){
+                    resultHtml += ` 
+                    <h3>Resolusi: ${data.media[i].quality}</h3>
+                    <a href="${data.media[i].url}" download>Download Video</a>
+                    `;
+                }
+            }
+        }else{
+            resultHtml=`
+            <h3>(Error:Resp_X)</h3>
+            `;
+        }
+    }
+    document.getElementById("result").innerHTML = resultHtml;
 }
-.container {
-    padding: 20px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background-color: #EDDCD9;
-    min-width: 105px;
-    min-height: 10%;
-    max-width: 300px;
-    border: 2px solid #264143;
-    border-radius: 20px;
-    box-shadow: 3px 4px 0px 1px #E99F4C;
-  }
 
 
-  .title {
-    color: #264143;
-    font-weight: 900;
-    font-size: 1.5em;
-    margin-top: 20px;
-  }
-  
-  .selectPlatform{
-    padding-top: 5px;
-    background-color:  #f4d3aa;
-    justify-content: center;
-    width:60%;
-    border:2px solid #264143;
-    border-radius: 10px;
-    box-shadow: 3px 4px 0px 1px #E99F4C;
-    align-items: center;
-  }
+function displayResultForYoutube(data,data1,platform){
+    let resultHtmlForYoutube = "";
+    if (platform === "youtube") {
+                
+        resultHtmlForYoutube = `
+            <img src="${data.thumbnail}" alt="Thumbnail" width="100%">
+            <h3>${data.title}</h3>
 
-  .sub_title {
-    font-weight: 550;
-    text-align: center;
-  }
-  
- select {
-    background-color: #fff4e6;
-    margin-top: 5px;
-    justify-content: center;
-    width: 100%;
-    padding: 8px 20px;
-    border: 2px;
-    border-radius: 10px;
-    font-size: 15px;
-    text-align: center;
-  }
-  
-  input {
-    outline: none;
-    margin-top: 15px;
-    border: 2px solid #264143;
-    box-shadow: 3px 4px 0px 1px #E99F4C;
-    width: 95%;
-    padding: 12px 10px;
-    border-radius: 4px;
-    font-size: 15px;
-    text-align: center;
-  }
-  
-  .text-btn{
-    color:white;
-    justify-content: center;
-    margin:auto;
+            
+            <a href="${data.url}" download>Download Mp3</a>
+            <a href="${data1.url}" download>Download Mp4 (360p)</a>
+            
+        `;
+    }
+    document.getElementById("result").innerHTML = resultHtmlForYoutube;
+}
+
+
+//LOADER FUNCTION
+function loadLoader() {
+    document.getElementById("result").innerHTML = `
+
     
-  }
+    <!-- LOADER -->
+    <div class="loader">
+    <h3 id="loadingText">Memproses permintaan</h3> 
+        <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
+            <div class="wheel"></div>
+            <div class="hamster">
+                <div class="hamster__body">
+                    <div class="hamster__head">
+                        <div class="hamster__ear"></div>
+                        <div class="hamster__eye"></div>
+                        <div class="hamster__nose"></div>
+                    </div>
+                    <div class="hamster__limb hamster__limb--fr"></div>
+                    <div class="hamster__limb hamster__limb--fl"></div>
+                    <div class="hamster__limb hamster__limb--br"></div>
+                    <div class="hamster__limb hamster__limb--bl"></div>
+                    <div class="hamster__tail"></div>
+                </div>
+            </div>
+            <div class="spoke"></div>
+        </div>
+    </div>
+    `;
 
-  .btn {
-    padding: 10px;
-    margin-top: 25px;
-    margin-bottom: -20px;
-    width: 100%;
-    font-size: 15px;
-    background: #fe9431;
-    border: 2.1px dashed #ff9532;
-    border-radius: 10px;
-    font-weight: 800;
-    box-shadow: 3px 3px 0px 0px #c17b2a;
-  }
-  
-  .text-btn:hover{
-    color: #000000;
-  }
-  .btn:hover {
-    background: #ffd9b6;
-    border: 2.1px dashed #ff8e05;
+    // Panggil elemen setelah HTML telah diubah
+    let count = 0;
+    const textElement = document.getElementById("loadingText");
 
-  }
-  
-
-
-
-#result {
-    margin-top: 46px;
+    setInterval(() => {
+        count = (count + 1) % 4;  // Loop dari 0 ke 3
+        textElement.innerText = "Memproses permintaan" + ".".repeat(count);
+    }, 500); // Ubah setiap 500ms
 }
 
-#result img {
-    width: 100%;
-    border-radius: 21px;
+//FUNCTION AUTOMATIC DETECT INPUT FOR CHANGE SELECT OPTION
+function detectInput(){
+document.getElementById("videoUrl").addEventListener("input", function () {
+    let url = this.value.toLowerCase();
+    let platformSelect = document.getElementById("platform");
+
+    if (url.includes("youtube") || url.includes("youtu.be")) {
+        platformSelect.value = "youtube";
+    } else if (url.includes("facebook") || url.includes("fb.watch")) {
+        platformSelect.value = "facebook";
+    } else if (url.includes("instagram") || url.includes("ig")) {
+        platformSelect.value = "instagram";
+    } else if (url.includes("tiktok")) {
+        platformSelect.value = "tiktok";
+    } else if (url.includes("twitter") || url.includes("x.com")) {
+        platformSelect.value = "twitter";
+    } else if (url.includes("spotify") || url.includes("spotify.com")) {
+        platformSelect.value = "spotify";
+    }
     
-}
-
-#result a {
-    display: block;
-    margin-top: 10px;
-    padding: 10px;
-    text-align: center;
-    background: #ffd6a9;
-    border:3px solid #ff8a05;
-    color: rgb(0, 0, 0);
-    text-decoration: none;
-    font-weight: 600;
-    border-radius: 5px;
-    animation: blink-border 1s infinite;
-}
-
-#result a:hover {
-    background: #0056b3;
-}
-
-@keyframes blink-border {
-    0% { border-color: #ff8a05; }  /* Warna awal */
-    50% { border-color: transparent; } /* Hilang sementara */
-    100% { border-color: #ff8a05; } /* Kembali ke awal */
-}
-
-
-
-/* SOSMED BUTTON */
-.btn-sosmed {
-  --font-color: #323232;
-  --font-color-sub: #666;
-  --bg-color: #fff;
-  --main-color: #c17b2a;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 20px;
-  border-radius: 5px;
-}
-
-
-.login-with {
-  display: flex;
-  gap: 20px;
-}
-
-.button-log {
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
-  border: 2px solid black;
-  background-color: #EDDCD9;
-  box-shadow: 3px 3px 0px 0px #c17b2a;
-  color: var(--font-color);
-  font-size: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.icon {
-  display: flex;
-  width: 24px;
-  height: 24px;
-  fill:black;
-  
-}
-
-.button-log:active, .button-confirm:active {
-  box-shadow: 0px 0px var(--main-color);
-  transform: translate(3px, 3px);
-}
-
-.button-confirm {
-  margin: 50px auto 0 auto;
-  width: 120px;
-  height: 40px;
-  border-radius: 5px;
-  border: 2px solid var(--main-color);
-  background-color: var(--bg-color);
-  box-shadow: 4px 4px var(--main-color);
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--font-color);
-  cursor: pointer;
-}
-
-
- /* Footer */
- .footer {
-  position: flex;
-  bottom: 10px;
-  width: 100%;
-  text-align:center;
-  font-size: 14px;
-  opacity: 0.8;
-}
-
-/* LOADER */ 
-.loader{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
- 
-}
-.wheel-and-hamster {
-  --dur: 1s;
-  display: flex;
-  position: relative;
-  justify-content: center;
-  width: 12em;
-  height: 12em;
-  font-size: 8px;
-}
-
-.wheel,
-.hamster,
-.hamster div,
-.spoke {
-  position: absolute;
-}
-
-.wheel,
-.spoke {
-  border-radius: 50%;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.wheel {
-  background: radial-gradient(100% 100% at center,hsla(0,0%,60%,0) 47.8%,hsl(0,0%,60%) 48%);
-  z-index: 2;
-}
-
-.hamster {
-  animation: hamster var(--dur) ease-in-out infinite;
-  top: 50%;
-  left: calc(50% - 3.5em);
-  width: 7em;
-  height: 3.75em;
-  transform: rotate(4deg) translate(-0.8em,1.85em);
-  transform-origin: 50% 0;
-  z-index: 1;
-}
-
-.hamster__head {
-  animation: hamsterHead var(--dur) ease-in-out infinite;
-  background: hsl(30,90%,55%);
-  border-radius: 70% 30% 0 100% / 40% 25% 25% 60%;
-  box-shadow: 0 -0.25em 0 hsl(30,90%,80%) inset,
-		0.75em -1.55em 0 hsl(30,90%,90%) inset;
-  top: 0;
-  left: -2em;
-  width: 2.75em;
-  height: 2.5em;
-  transform-origin: 100% 50%;
-}
-
-.hamster__ear {
-  animation: hamsterEar var(--dur) ease-in-out infinite;
-  background: hsl(0,90%,85%);
-  border-radius: 50%;
-  box-shadow: -0.25em 0 hsl(30,90%,55%) inset;
-  top: -0.25em;
-  right: -0.25em;
-  width: 0.75em;
-  height: 0.75em;
-  transform-origin: 50% 75%;
-}
-
-.hamster__eye {
-  animation: hamsterEye var(--dur) linear infinite;
-  background-color: hsl(0,0%,0%);
-  border-radius: 50%;
-  top: 0.375em;
-  left: 1.25em;
-  width: 0.5em;
-  height: 0.5em;
-}
-
-.hamster__nose {
-  background: hsl(0,90%,75%);
-  border-radius: 35% 65% 85% 15% / 70% 50% 50% 30%;
-  top: 0.75em;
-  left: 0;
-  width: 0.2em;
-  height: 0.25em;
-}
-
-.hamster__body {
-  animation: hamsterBody var(--dur) ease-in-out infinite;
-  background: hsl(30,90%,90%);
-  border-radius: 50% 30% 50% 30% / 15% 60% 40% 40%;
-  box-shadow: 0.1em 0.75em 0 hsl(30,90%,55%) inset,
-		0.15em -0.5em 0 hsl(30,90%,80%) inset;
-  top: 0.25em;
-  left: 2em;
-  width: 4.5em;
-  height: 3em;
-  transform-origin: 17% 50%;
-  transform-style: preserve-3d;
-}
-
-.hamster__limb--fr,
-.hamster__limb--fl {
-  clip-path: polygon(0 0,100% 0,70% 80%,60% 100%,0% 100%,40% 80%);
-  top: 2em;
-  left: 0.5em;
-  width: 1em;
-  height: 1.5em;
-  transform-origin: 50% 0;
-}
-
-.hamster__limb--fr {
-  animation: hamsterFRLimb var(--dur) linear infinite;
-  background: linear-gradient(hsl(30,90%,80%) 80%,hsl(0,90%,75%) 80%);
-  transform: rotate(15deg) translateZ(-1px);
-}
-
-.hamster__limb--fl {
-  animation: hamsterFLLimb var(--dur) linear infinite;
-  background: linear-gradient(hsl(30,90%,90%) 80%,hsl(0,90%,85%) 80%);
-  transform: rotate(15deg);
-}
-
-.hamster__limb--br,
-.hamster__limb--bl {
-  border-radius: 0.75em 0.75em 0 0;
-  clip-path: polygon(0 0,100% 0,100% 30%,70% 90%,70% 100%,30% 100%,40% 90%,0% 30%);
-  top: 1em;
-  left: 2.8em;
-  width: 1.5em;
-  height: 2.5em;
-  transform-origin: 50% 30%;
-}
-
-.hamster__limb--br {
-  animation: hamsterBRLimb var(--dur) linear infinite;
-  background: linear-gradient(hsl(30,90%,80%) 90%,hsl(0,90%,75%) 90%);
-  transform: rotate(-25deg) translateZ(-1px);
-}
-
-.hamster__limb--bl {
-  animation: hamsterBLLimb var(--dur) linear infinite;
-  background: linear-gradient(hsl(30,90%,90%) 90%,hsl(0,90%,85%) 90%);
-  transform: rotate(-25deg);
-}
-
-.hamster__tail {
-  animation: hamsterTail var(--dur) linear infinite;
-  background: hsl(0,90%,85%);
-  border-radius: 0.25em 50% 50% 0.25em;
-  box-shadow: 0 -0.2em 0 hsl(0,90%,75%) inset;
-  top: 1.5em;
-  right: -0.5em;
-  width: 1em;
-  height: 0.5em;
-  transform: rotate(30deg) translateZ(-1px);
-  transform-origin: 0.25em 0.25em;
-}
-
-.spoke {
-  animation: spoke var(--dur) linear infinite;
-  background: radial-gradient(100% 100% at center,hsl(0,0%,60%) 4.8%,hsla(0,0%,60%,0) 5%),
-		linear-gradient(hsla(0,0%,55%,0) 46.9%,hsl(0,0%,65%) 47% 52.9%,hsla(0,0%,65%,0) 53%) 50% 50% / 99% 99% no-repeat;
-}
-
-/* Animations */
-@keyframes hamster {
-  from, to {
-    transform: rotate(4deg) translate(-0.8em,1.85em);
-  }
-
-  50% {
-    transform: rotate(0) translate(-0.8em,1.85em);
-  }
-}
-
-@keyframes hamsterHead {
-  from, 25%, 50%, 75%, to {
-    transform: rotate(0);
-  }
-
-  12.5%, 37.5%, 62.5%, 87.5% {
-    transform: rotate(8deg);
-  }
-}
-
-@keyframes hamsterEye {
-  from, 90%, to {
-    transform: scaleY(1);
-  }
-
-  95% {
-    transform: scaleY(0);
-  }
-}
-
-@keyframes hamsterEar {
-  from, 25%, 50%, 75%, to {
-    transform: rotate(0);
-  }
-
-  12.5%, 37.5%, 62.5%, 87.5% {
-    transform: rotate(12deg);
-  }
-}
-
-@keyframes hamsterBody {
-  from, 25%, 50%, 75%, to {
-    transform: rotate(0);
-  }
-
-  12.5%, 37.5%, 62.5%, 87.5% {
-    transform: rotate(-2deg);
-  }
-}
-
-@keyframes hamsterFRLimb {
-  from, 25%, 50%, 75%, to {
-    transform: rotate(50deg) translateZ(-1px);
-  }
-
-  12.5%, 37.5%, 62.5%, 87.5% {
-    transform: rotate(-30deg) translateZ(-1px);
-  }
-}
-
-@keyframes hamsterFLLimb {
-  from, 25%, 50%, 75%, to {
-    transform: rotate(-30deg);
-  }
-
-  12.5%, 37.5%, 62.5%, 87.5% {
-    transform: rotate(50deg);
-  }
-}
-
-@keyframes hamsterBRLimb {
-  from, 25%, 50%, 75%, to {
-    transform: rotate(-60deg) translateZ(-1px);
-  }
-
-  12.5%, 37.5%, 62.5%, 87.5% {
-    transform: rotate(20deg) translateZ(-1px);
-  }
-}
-
-@keyframes hamsterBLLimb {
-  from, 25%, 50%, 75%, to {
-    transform: rotate(20deg);
-  }
-
-  12.5%, 37.5%, 62.5%, 87.5% {
-    transform: rotate(-60deg);
-  }
-}
-
-@keyframes hamsterTail {
-  from, 25%, 50%, 75%, to {
-    transform: rotate(30deg) translateZ(-1px);
-  }
-
-  12.5%, 37.5%, 62.5%, 87.5% {
-    transform: rotate(10deg) translateZ(-1px);
-  }
-}
-
-@keyframes spoke {
-  from {
-    transform: rotate(0);
-  }
-
-  to {
-    transform: rotate(-1turn);
-  }
+});
 }
