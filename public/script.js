@@ -1,68 +1,74 @@
+// KONFIGURASI: Ganti ke URL API langsung
+// Jika masih terkena CORS Error, gunakan proxy publik seperti: "https://corsproxy.io/?" atau "https://api.allorigins.win/raw?url="
+const CORS_PROXY = ""; // Biarkan kosong jika ingin direct hit, isi jika butuh bypass CORS
+const API_BASE = "https://api.ryzumi.vip/api/downloader";
 
-let ENV = {}; 
-
-
-async function loadEnv() {
-    const response = await fetch("/89asdsdasad89w02129pejdni10348k0mkg9pbmg8m42822fnnauf97ai91jmn2a8a2475nfo43pa9w719dnd86nq8weh67w7ber8jrji2nkqhg9e823j7hf8jendjhqkgedjr78drd8d9jqpourjndbumdadijubo1jnfi1kjf8rb181");
-    ENV = await response.json();
-}
-
-loadEnv();
 detectInput();
+
 async function fetchData() {
     const platform = document.getElementById("platform").value;
     const videoUrl = document.getElementById("videoUrl").value;
     let apiUrl = "";
-    let apiUrl1 = "";
+    let apiUrl1 = ""; // Khusus Youtube (MP4)
 
     if(!videoUrl){
         document.getElementById("result").innerHTML = `
         <h3>Harap masukkan link video.</h3>
         `;
+        return;
     }
 
     loadLoader();
     
+    // MENENTUKAN URL API LANGSUNG (Hardcoded)
     if (platform === "youtube") {
-        apiUrl = `${ENV.YOUTUBE_MP3_API}?url=${videoUrl}`;
-        apiUrl1 = `${ENV.YOUTUBE_MP4_API}?url=${videoUrl}`;
+        apiUrl = `${API_BASE}/ytmp3?url=${videoUrl}`;
+        apiUrl1 = `${API_BASE}/ytmp4?url=${videoUrl}`;
 
     } else if (platform === "facebook") {
-        apiUrl = `${ENV.FACEBOOK_API}?url=${videoUrl}`;
+        apiUrl = `${API_BASE}/facebook?url=${videoUrl}`;
 
-    }else if (platform === "instagram"){
-        apiUrl = `${ENV.INSTAGRAM_API}?url=${videoUrl}`;
+    } else if (platform === "instagram"){
+        apiUrl = `${API_BASE}/ig?url=${videoUrl}`;
 
-    }else if (platform === "tiktok") {
-        apiUrl = `${ENV.TIKTOK_API}?url=${videoUrl}`;
+    } else if (platform === "tiktok") {
+        apiUrl = `${API_BASE}/tiktok?url=${videoUrl}`;
 
-    }else if (platform === "spotify"){
-        apiUrl = `${ENV.SPOTIFY_API}?url=${videoUrl}`;
+    } else if (platform === "spotify"){
+        apiUrl = `${API_BASE}/spotify?url=${videoUrl}`;
 
-    }else if (platform === "twitter"){
-        apiUrl = `${ENV.TWITTER_API}?url=${videoUrl}`;
+    } else if (platform === "twitter"){
+        apiUrl = `${API_BASE}/twitter?url=${videoUrl}`;
+    }
+
+    // Tambahkan Proxy jika diset
+    if (CORS_PROXY) {
+        apiUrl = CORS_PROXY + encodeURIComponent(apiUrl);
+        if(apiUrl1) apiUrl1 = CORS_PROXY + encodeURIComponent(apiUrl1);
     }
 
     try {
         if(platform === "youtube"){
+            // Fetch langsung ke Ryzumi
             const response = await fetch(apiUrl);
             const response1 = await fetch(apiUrl1);
             
-        if (!response.ok || !response1.ok) {
-            console.error(`Gagal mengambil data!(Err:RespYT) Status: ${response.status} - ${response.statusText}`);
-            throw new Error("Error.");
-        }
+            if (!response.ok || !response1.ok) {
+                console.error(`Gagal mengambil data! Status: ${response.status}`);
+                throw new Error("Gagal mengambil data.");
+            }
 
-        const data = await response.json();
-        const data1 = await response1.json();
-        displayResultForYoutube(data,data1, platform);
+            const data = await response.json();
+            const data1 = await response1.json();
+            displayResultForYoutube(data, data1, platform);
 
-        }else{
+        } else {
+            // Fetch langsung ke Ryzumi
             const response = await fetch(apiUrl);
             
             if (!response.ok) {
-                console.error(`Gagal mengambil data! Status: ${response.status} - ${response.statusText}`);
-                throw new Error("Error.");
+                console.error(`Gagal mengambil data! Status: ${response.status}`);
+                throw new Error("Gagal mengambil data.");
             }
 
             const data = await response.json();
@@ -70,55 +76,81 @@ async function fetchData() {
         }
         
     } catch (error) {
-        document.getElementById("result").innerHTML =  `
-            <h3>Terjadi kesalahan saat memproses permintaan Anda.</h3>
-            <a href="https://yt.savetube.me/1kejjj1?id=361901348">Link cadangan</a>
-            `;
+        console.error("Fetch Error:", error);
+        
+        let errorMsg = "Terjadi kesalahan saat memproses permintaan Anda.";
+        
+        // Deteksi error CORS atau Network
+        if (error.message.includes("Failed to fetch") || error.name === "TypeError") {
+            errorMsg = "Gagal menghubungi server (CORS Blocked). API menolak akses langsung dari browser.";
+        }
 
+        document.getElementById("result").innerHTML =  `
+            <h3>${errorMsg}</h3>
+            <p>Cobalah link cadangan di bawah:</p>
+            <a href="https://yt.savetube.me/1kejjj1?id=361901348" target="_blank">Link cadangan</a>
+            `;
     }
 }
 
-//FUNCTION
+//FUNCTION DISPLAY RESULT
 function displayResult(data, platform) {
     let resultHtml = "";
 
-    if (platform === "facebook" ) {
-        resultHtml=`
-        <img src="${data.data[0].thumbnail}" alt="Thumbnail" width="100%"></img>
-        <h3>Pilih Kualitas Video</h3>
-        `;
-        
-        for(i = 0; i < data.data.length;i++){
-            resultHtml += ` 
-            <a href="${data.data[i].url}">Kualitas ${data.data[i].resolution}</a>
+    // Validasi data kosong
+    if (!data) {
+        document.getElementById("result").innerHTML = "<h3>Data tidak ditemukan atau API Error.</h3>";
+        return;
+    }
+
+    if (platform === "facebook") {
+        // Cek struktur data FB (terkadang berbeda tergantung response API)
+        if(data.data && data.data.length > 0) {
+            resultHtml=`
+            <img src="${data.data[0].thumbnail}" alt="Thumbnail" width="100%"></img>
+            <h3>Pilih Kualitas Video</h3>
             `;
+            
+            for(i = 0; i < data.data.length;i++){
+                resultHtml += ` 
+                <a href="${data.data[i].url}">Kualitas ${data.data[i].resolution}</a>
+                `;
+            }
+        } else {
+            resultHtml = "<h3>Video Facebook tidak ditemukan / Private.</h3>";
         }
 
-    }else if(platform === "instagram"){
-        for(i = 0; i < data.data.length;i++){
-            resultHtml += ` 
-            <img src="${data.data[i].thumbnail}" alt="Thumbnail" width="100%"></img>
-            <a href="${data.data[i].url}" download>Download Post</a>
-            `;
+    } else if(platform === "instagram"){
+        if (data.data && Array.isArray(data.data)) {
+            for(i = 0; i < data.data.length;i++){
+                resultHtml += ` 
+                <img src="${data.data[i].thumbnail}" alt="Thumbnail" width="100%"></img>
+                <a href="${data.data[i].url}" download>Download Post</a>
+                `;
+            }
+        } else {
+            resultHtml = "<h3>Post Instagram tidak ditemukan.</h3>";
+        }
+
+    } else if (platform === "tiktok") {
+        if (data.data && data.data.data) { // Sesuaikan dengan struktur JSON Ryzumi
+            resultHtml=`
+            <img src="${data.data.data.origin_cover}" alt="Thumbnail" width="100%"></img>
+            
+            <h3>Download Audio</h3>
+            <a href="${data.data.data.music}" download="videoNo_WM.mp3">Mp3</a>
+
+            <h3>Download Video(Mp4)</h3>
+            <a href="${data.data.data.play}" download="videoNo_WM.mp4">Tanpa Watermark</a>
+            <a href="${data.data.data.hdplay}" download="videoNo_WM_HD.mp4">Tanpa Watermark(HD)</a>
+            <a href="${data.data.data.wmplay}" download="videoWM.mp4">Dengan Watermark</a>
+            `;  
+        } else {
+             resultHtml = "<h3>Video TikTok tidak ditemukan.</h3>";
         }
         
-
-    }else if (platform === "tiktok") {
-        resultHtml=`
-        <img src="${data.data.data.origin_cover}" alt="Thumbnail" width="100%"></img>
-        
-        <h3>Download Audio</h3>
-        <a href="${data.data.data.music}" download="videoNo_WM.mp4">Mp3</a>
-
-        <h3>Download Video(Mp4)</h3>
-        <a href="${data.data.data.play}" download="videoNo_WM.mp4">Tanpa Watermark</a>
-        <a href="${data.data.data.hdplay}" download="videoNo_WM_HD.mp4">Tanpa Watermark(HD)</a>
-        <a href="${data.data.data.wmplay}" download="videoWM.mp4">Dengan Watermark</a>
-        
-        `;  
-        
-    }else if(platform === "spotify"){
-        if(data.success){
+    } else if(platform === "spotify"){
+        if(data.success && data.metadata){
             resultHtml=`
             <img src="${data.metadata.cover}" alt="Thumbnail" width="100%"></img>
             <h5>Author:${data.metadata.artists}</h5>
@@ -128,12 +160,12 @@ function displayResult(data, platform) {
             `;
         }else{
             resultHtml=`
-            <h3>Harap berikan link track music</h3>
+            <h3>Lagu tidak ditemukan atau link salah.</h3>
             `;
         }
 
-    }else if(platform === "twitter"){
-        if(data.status){
+    } else if(platform === "twitter"){
+        if(data.status && data.media){
             if(data.type === "image"){
                 resultHtml=`
                 <h3>Format file:.jpg</h3>
@@ -156,7 +188,7 @@ function displayResult(data, platform) {
             }
         }else{
             resultHtml=`
-            <h3>(Error:Resp_X)</h3>
+            <h3>Gagal mengambil data Twitter.</h3>
             `;
         }
     }
@@ -167,16 +199,24 @@ function displayResult(data, platform) {
 function displayResultForYoutube(data,data1,platform){
     let resultHtmlForYoutube = "";
     if (platform === "youtube") {
-                
-        resultHtmlForYoutube = `
-            <img src="${data.thumbnail}" alt="Thumbnail" width="100%">
-            <h3>${data.title}</h3>
+        // Fallback jika salah satu request gagal tapi yang lain berhasil
+        const thumb = (data && data.thumbnail) ? data.thumbnail : (data1 && data1.thumbnail) ? data1.thumbnail : "";
+        const title = (data && data.title) ? data.title : (data1 && data1.title) ? data1.title : "Video Youtube";
+        
+        const mp3Url = (data && data.url) ? data.url : "#";
+        const mp4Url = (data1 && data1.url) ? data1.url : "#";
 
-            
-            <a href="${data.url}" download>Download Mp3</a>
-            <a href="${data1.url}" download>Download Mp4 (360p)</a>
-            
-        `;
+        if (mp3Url === "#" && mp4Url === "#") {
+            resultHtmlForYoutube = "<h3>Gagal mendapatkan link download Youtube.</h3>";
+        } else {
+            resultHtmlForYoutube = `
+                <img src="${thumb}" alt="Thumbnail" width="100%">
+                <h3>${title}</h3>
+
+                <a href="${mp3Url}" download target="_blank">Download Mp3</a>
+                <a href="${mp4Url}" download target="_blank">Download Mp4 (360p)</a>
+            `;
+        }
     }
     document.getElementById("result").innerHTML = resultHtmlForYoutube;
 }
@@ -185,8 +225,6 @@ function displayResultForYoutube(data,data1,platform){
 //LOADER FUNCTION
 function loadLoader() {
     document.getElementById("result").innerHTML = `
-
-    
     <!-- LOADER -->
     <div class="loader">
     <h3 id="loadingText">Memproses permintaan</h3> 
@@ -215,31 +253,39 @@ function loadLoader() {
     let count = 0;
     const textElement = document.getElementById("loadingText");
 
-    setInterval(() => {
-        count = (count + 1) % 4;  // Loop dari 0 ke 3
-        textElement.innerText = "Memproses permintaan" + ".".repeat(count);
-    }, 500); // Ubah setiap 500ms
+    // Interval animasi text
+    const intervalId = setInterval(() => {
+        const el = document.getElementById("loadingText");
+        if(el) {
+            count = (count + 1) % 4;  // Loop dari 0 ke 3
+            el.innerText = "Memproses permintaan" + ".".repeat(count);
+        } else {
+            clearInterval(intervalId); // Hentikan jika elemen hilang
+        }
+    }, 500); 
 }
 
 //FUNCTION AUTOMATIC DETECT INPUT FOR CHANGE SELECT OPTION
 function detectInput(){
-document.getElementById("videoUrl").addEventListener("input", function () {
-    let url = this.value.toLowerCase();
-    let platformSelect = document.getElementById("platform");
+    const videoInput = document.getElementById("videoUrl");
+    if(videoInput){
+        videoInput.addEventListener("input", function () {
+            let url = this.value.toLowerCase();
+            let platformSelect = document.getElementById("platform");
 
-    if (url.includes("youtube") || url.includes("youtu.be")) {
-        platformSelect.value = "youtube";
-    } else if (url.includes("facebook") || url.includes("fb.watch")) {
-        platformSelect.value = "facebook";
-    } else if (url.includes("instagram") || url.includes("ig")) {
-        platformSelect.value = "instagram";
-    } else if (url.includes("tiktok")) {
-        platformSelect.value = "tiktok";
-    } else if (url.includes("twitter") || url.includes("x.com")) {
-        platformSelect.value = "twitter";
-    } else if (url.includes("spotify") || url.includes("spotify.com")) {
-        platformSelect.value = "spotify";
+            if (url.includes("youtube") || url.includes("youtu.be")) {
+                platformSelect.value = "youtube";
+            } else if (url.includes("facebook") || url.includes("fb.watch")) {
+                platformSelect.value = "facebook";
+            } else if (url.includes("instagram") || url.includes("ig")) {
+                platformSelect.value = "instagram";
+            } else if (url.includes("tiktok")) {
+                platformSelect.value = "tiktok";
+            } else if (url.includes("twitter") || url.includes("x.com")) {
+                platformSelect.value = "twitter";
+            } else if (url.includes("spotify") || url.includes("spotify.com")) {
+                platformSelect.value = "spotify";
+            }
+        });
     }
-    
-});
 }
