@@ -6,7 +6,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "build": "javascript-obfuscator public/script.js --output public/script.js --compact true --self-defending true --control-flow-flattening true --control-flow-flattening-threshold 1 --dead-code-injection true --dead-code-injection-threshold 1 --string-array true --rotate-string-array true --shuffle-string-array true"
+    "build": "javascript-obfuscator ./public/script.js --output ./public/script.js --compact true --self-defending true --control-flow-flattening true --control-flow-flattening-threshold 1 --dead-code-injection true --dead-code-injection-threshold 1 --string-array true --rotate-string-array true --shuffle-string-array true"
   },
   "engines": {
     "node": ">=18.x"
