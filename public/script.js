@@ -211,7 +211,7 @@ function loadLoader() {
     </div>
     `;
 
-    // Panggil elemen setelah HTML telah diubah
+
     let count = 0;
     const textElement = document.getElementById("loadingText");
 
@@ -221,7 +221,7 @@ function loadLoader() {
     }, 500); 
 }
 
-//FUNCTION AUTOMATIC DETECT INPUT FOR CHANGE SELECT OPTION
+
 function detectInput(){
 document.getElementById("videoUrl").addEventListener("input", function () {
     let url = this.value.toLowerCase();
@@ -243,4 +243,5 @@ document.getElementById("videoUrl").addEventListener("input", function () {
     
 });
 }
+
 
