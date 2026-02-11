@@ -243,6 +243,3 @@ document.getElementById("videoUrl").addEventListener("input", function () {
     
 });
 }
-
-
-coba  buat agar langsung fetch dari sini tanpa ketegantungan server.js
