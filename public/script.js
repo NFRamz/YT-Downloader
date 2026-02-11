@@ -216,9 +216,9 @@ function loadLoader() {
     const textElement = document.getElementById("loadingText");
 
     setInterval(() => {
-        count = (count + 1) % 4;  // Loop dari 0 ke 3
+        count = (count + 1) % 4;  // Loop dari 0 ke 3(jadi titik-titiknya akan jalan spt ., .., ...)
         textElement.innerText = "Memproses permintaan" + ".".repeat(count);
-    }, 500); // Ubah setiap 500ms
+    }, 500); 
 }
 
 //FUNCTION AUTOMATIC DETECT INPUT FOR CHANGE SELECT OPTION
@@ -243,3 +243,4 @@ document.getElementById("videoUrl").addEventListener("input", function () {
     
 });
 }
+
